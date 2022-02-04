@@ -22,10 +22,13 @@ async function listTodos (ctx) {
 async function createTodo (ctx) {
     const title = ctx.request.body.title
 
-    if (title === null || title === undefined) {
+    if (title === undefined) {
         ctx.status = 422
         ctx.body = { errorMsg: "Missing parameter 'title'" }
-    } else {
+    } else if(title === null){
+        ctx.status = 400
+        ctx.body = { errorMsg: "Invalid parameter 'title'" }
+    }else {
         const result = await getDB().collection("todos").insertOne({
             title,
             completed: false,
